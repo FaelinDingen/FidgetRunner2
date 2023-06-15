@@ -1,0 +1,5 @@
+There is an problem if u open the project in unity the default material is probably missing (purple) 
+to fix this you need to go to the mesh renderer and dubble click on the material that its using
+then go to edit/rendering/materials/convert selected...
+then press ok to the popup
+this should fix it
