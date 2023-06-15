@@ -8,9 +8,8 @@ public class PlayerController : MonoBehaviour {
     private bool grounded = true;
     private bool canJump = true;
     public float speed;
-    private float previousAccelerationMagnitude;
-    private float accelerationChangeThreshold = .2f; // Adjust this threshold as needed
-    private int accelerationFramesCount = 50;
+    //private float previousAccelerationMagnitude;
+    private float accelerationChangeThreshold = 3f; // Adjust this threshold as needed
 
     [SerializeField] private float actualSpeed;
 
@@ -41,32 +40,14 @@ public class PlayerController : MonoBehaviour {
         else {
             float currentAccelerationMagnitude = Input.acceleration.magnitude;
 
-            if (IsThrowingMotion(currentAccelerationMagnitude) && grounded && canJump) {
+            if (currentAccelerationMagnitude > accelerationChangeThreshold && grounded) {
                 StartCoroutine(Jump());
             }
 
-            previousAccelerationMagnitude = currentAccelerationMagnitude;
+            //previousAccelerationMagnitude = currentAccelerationMagnitude;
         }
 
     }
-
-    //AI code
-    private bool IsThrowingMotion(float currentAccelerationMagnitude) {
-        float accelerationChange = Mathf.Abs(currentAccelerationMagnitude - previousAccelerationMagnitude);
-        float sumAccelerationChange = accelerationChange;
-
-        // Store the acceleration change over multiple frames and calculate the sum
-        for (int i = 1; i < accelerationFramesCount; i++) {
-            currentAccelerationMagnitude = Input.acceleration.magnitude;
-            accelerationChange = Mathf.Abs(currentAccelerationMagnitude - previousAccelerationMagnitude);
-            sumAccelerationChange += accelerationChange;
-            previousAccelerationMagnitude = currentAccelerationMagnitude;
-        }
-
-        float averageAccelerationChange = sumAccelerationChange / accelerationFramesCount;
-        return averageAccelerationChange > accelerationChangeThreshold;
-    }
-    //end AI code
 
     private IEnumerator Jump() {
         rb.AddForce(new Vector3(0, 600, 0));
